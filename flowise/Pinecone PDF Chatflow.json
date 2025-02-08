@@ -1,0 +1,710 @@
+{
+  "nodes": [
+    {
+      "id": "pinecone_0",
+      "position": {
+        "x": 1172.1030320661814,
+        "y": 213.97467817000597
+      },
+      "type": "customNode",
+      "data": {
+        "id": "pinecone_0",
+        "label": "Pinecone",
+        "version": 5,
+        "name": "pinecone",
+        "type": "Pinecone",
+        "baseClasses": [
+          "Pinecone",
+          "VectorStoreRetriever",
+          "BaseRetriever"
+        ],
+        "category": "Vector Stores",
+        "description": "Upsert embedded data and perform similarity or mmr search using Pinecone, a leading fully managed hosted vector database",
+        "inputParams": [
+          {
+            "label": "Connect Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "pineconeApi"
+            ],
+            "id": "pinecone_0-input-credential-credential"
+          },
+          {
+            "label": "Pinecone Index",
+            "name": "pineconeIndex",
+            "type": "string",
+            "id": "pinecone_0-input-pineconeIndex-string"
+          },
+          {
+            "label": "Pinecone Namespace",
+            "name": "pineconeNamespace",
+            "type": "string",
+            "placeholder": "my-first-namespace",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-pineconeNamespace-string"
+          },
+          {
+            "label": "File Upload",
+            "name": "fileUpload",
+            "description": "Allow file upload on the chat",
+            "hint": {
+              "label": "How to use",
+              "value": "\n**File Upload**\n\nThis allows file upload on the chat. Uploaded files will be upserted on the fly to the vector store.\n\n**Note:**\n- You can only turn on file upload for one vector store at a time.\n- At least one Document Loader node should be connected to the document input.\n- Document Loader should be file types like PDF, DOCX, TXT, etc.\n\n**How it works**\n- Uploaded files will have the metadata updated with the chatId.\n- This will allow the file to be associated with the chatId.\n- When querying, metadata will be filtered by chatId to retrieve files associated with the chatId.\n"
+            },
+            "type": "boolean",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-fileUpload-boolean"
+          },
+          {
+            "label": "Pinecone Text Key",
+            "name": "pineconeTextKey",
+            "description": "The key in the metadata for storing text. Default to `text`",
+            "type": "string",
+            "placeholder": "text",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-pineconeTextKey-string"
+          },
+          {
+            "label": "Pinecone Metadata Filter",
+            "name": "pineconeMetadataFilter",
+            "type": "json",
+            "optional": true,
+            "additionalParams": true,
+            "id": "pinecone_0-input-pineconeMetadataFilter-json"
+          },
+          {
+            "label": "Top K",
+            "name": "topK",
+            "description": "Number of top results to fetch. Default to 4",
+            "placeholder": "4",
+            "type": "number",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-topK-number"
+          },
+          {
+            "label": "Search Type",
+            "name": "searchType",
+            "type": "options",
+            "default": "similarity",
+            "options": [
+              {
+                "label": "Similarity",
+                "name": "similarity"
+              },
+              {
+                "label": "Max Marginal Relevance",
+                "name": "mmr"
+              }
+            ],
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-searchType-options"
+          },
+          {
+            "label": "Fetch K (for MMR Search)",
+            "name": "fetchK",
+            "description": "Number of initial documents to fetch for MMR reranking. Default to 20. Used only when the search type is MMR",
+            "placeholder": "20",
+            "type": "number",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-fetchK-number"
+          },
+          {
+            "label": "Lambda (for MMR Search)",
+            "name": "lambda",
+            "description": "Number between 0 and 1 that determines the degree of diversity among the results, where 0 corresponds to maximum diversity and 1 to minimum diversity. Used only when the search type is MMR",
+            "placeholder": "0.5",
+            "type": "number",
+            "additionalParams": true,
+            "optional": true,
+            "id": "pinecone_0-input-lambda-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Document",
+            "name": "document",
+            "type": "Document",
+            "list": true,
+            "optional": true,
+            "id": "pinecone_0-input-document-Document"
+          },
+          {
+            "label": "Embeddings",
+            "name": "embeddings",
+            "type": "Embeddings",
+            "id": "pinecone_0-input-embeddings-Embeddings"
+          },
+          {
+            "label": "Record Manager",
+            "name": "recordManager",
+            "type": "RecordManager",
+            "description": "Keep track of the record to prevent duplication",
+            "optional": true,
+            "id": "pinecone_0-input-recordManager-RecordManager"
+          }
+        ],
+        "inputs": {
+          "document": [
+            "{{fileLoader_0.data.instance}}"
+          ],
+          "embeddings": "{{openAIEmbeddings_0.data.instance}}",
+          "recordManager": "{{postgresRecordManager_0.data.instance}}",
+          "pineconeIndex": "testing1",
+          "pineconeNamespace": "",
+          "fileUpload": true,
+          "pineconeTextKey": "",
+          "pineconeMetadataFilter": "{\"file_name\":\"name\\n\"}",
+          "topK": "",
+          "searchType": "similarity",
+          "fetchK": "",
+          "lambda": ""
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "description": "",
+            "options": [
+              {
+                "id": "pinecone_0-output-retriever-Pinecone|VectorStoreRetriever|BaseRetriever",
+                "name": "retriever",
+                "label": "Pinecone Retriever",
+                "description": "",
+                "type": "Pinecone | VectorStoreRetriever | BaseRetriever"
+              },
+              {
+                "id": "pinecone_0-output-vectorStore-Pinecone|VectorStore",
+                "name": "vectorStore",
+                "label": "Pinecone Vector Store",
+                "description": "",
+                "type": "Pinecone | VectorStore"
+              }
+            ],
+            "default": "retriever"
+          }
+        ],
+        "outputs": {
+          "output": "retriever"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 604,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1172.1030320661814,
+        "y": 213.97467817000597
+      },
+      "dragging": false
+    },
+    {
+      "id": "recursiveCharacterTextSplitter_0",
+      "position": {
+        "x": -82.61057589253096,
+        "y": 481.56121105757774
+      },
+      "type": "customNode",
+      "data": {
+        "id": "recursiveCharacterTextSplitter_0",
+        "label": "Recursive Character Text Splitter",
+        "version": 2,
+        "name": "recursiveCharacterTextSplitter",
+        "type": "RecursiveCharacterTextSplitter",
+        "baseClasses": [
+          "RecursiveCharacterTextSplitter",
+          "TextSplitter",
+          "BaseDocumentTransformer",
+          "Runnable"
+        ],
+        "category": "Text Splitters",
+        "description": "Split documents recursively by different characters - starting with \"\\n\\n\", then \"\\n\", then \" \"",
+        "inputParams": [
+          {
+            "label": "Chunk Size",
+            "name": "chunkSize",
+            "type": "number",
+            "description": "Number of characters in each chunk. Default is 1000.",
+            "default": 1000,
+            "optional": true,
+            "id": "recursiveCharacterTextSplitter_0-input-chunkSize-number"
+          },
+          {
+            "label": "Chunk Overlap",
+            "name": "chunkOverlap",
+            "type": "number",
+            "description": "Number of characters to overlap between chunks. Default is 200.",
+            "default": 200,
+            "optional": true,
+            "id": "recursiveCharacterTextSplitter_0-input-chunkOverlap-number"
+          },
+          {
+            "label": "Custom Separators",
+            "name": "separators",
+            "type": "string",
+            "rows": 4,
+            "description": "Array of custom separators to determine when to split the text, will override the default separators",
+            "placeholder": "[\"|\", \"##\", \">\", \"-\"]",
+            "additionalParams": true,
+            "optional": true,
+            "id": "recursiveCharacterTextSplitter_0-input-separators-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "chunkSize": 1000,
+          "chunkOverlap": "50",
+          "separators": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "recursiveCharacterTextSplitter_0-output-recursiveCharacterTextSplitter-RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable",
+            "name": "recursiveCharacterTextSplitter",
+            "label": "RecursiveCharacterTextSplitter",
+            "description": "Split documents recursively by different characters - starting with \"\\n\\n\", then \"\\n\", then \" \"",
+            "type": "RecursiveCharacterTextSplitter | TextSplitter | BaseDocumentTransformer | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 429,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -82.61057589253096,
+        "y": 481.56121105757774
+      },
+      "dragging": false
+    },
+    {
+      "id": "fileLoader_0",
+      "position": {
+        "x": 592.1188848601251,
+        "y": 169.9660596707006
+      },
+      "type": "customNode",
+      "data": {
+        "id": "fileLoader_0",
+        "label": "File Loader",
+        "version": 2,
+        "name": "fileLoader",
+        "type": "Document",
+        "baseClasses": [
+          "Document"
+        ],
+        "category": "Document Loaders",
+        "description": "A generic file loader that can load txt, json, csv, docx, pdf, and other files",
+        "inputParams": [
+          {
+            "label": "File",
+            "name": "file",
+            "type": "file",
+            "fileType": "*",
+            "id": "fileLoader_0-input-file-file"
+          },
+          {
+            "label": "Pdf Usage",
+            "name": "pdfUsage",
+            "type": "options",
+            "description": "Only when loading PDF files",
+            "options": [
+              {
+                "label": "One document per page",
+                "name": "perPage"
+              },
+              {
+                "label": "One document per file",
+                "name": "perFile"
+              }
+            ],
+            "default": "perPage",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-pdfUsage-options"
+          },
+          {
+            "label": "JSONL Pointer Extraction",
+            "name": "pointerName",
+            "type": "string",
+            "description": "Only when loading JSONL files",
+            "placeholder": "<pointerName>",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-pointerName-string"
+          },
+          {
+            "label": "Additional Metadata",
+            "name": "metadata",
+            "type": "json",
+            "description": "Additional metadata to be added to the extracted documents",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-metadata-json"
+          },
+          {
+            "label": "Omit Metadata Keys",
+            "name": "omitMetadataKeys",
+            "type": "string",
+            "rows": 4,
+            "description": "Each document loader comes with a default set of metadata keys that are extracted from the document. You can use this field to omit some of the default metadata keys. The value should be a list of keys, seperated by comma. Use * to omit all metadata keys execept the ones you specify in the Additional Metadata field",
+            "placeholder": "key1, key2, key3.nestedKey1",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-omitMetadataKeys-string"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Text Splitter",
+            "name": "textSplitter",
+            "type": "TextSplitter",
+            "optional": true,
+            "id": "fileLoader_0-input-textSplitter-TextSplitter"
+          }
+        ],
+        "inputs": {
+          "textSplitter": "{{recursiveCharacterTextSplitter_0.data.instance}}",
+          "pdfUsage": "perFile",
+          "pointerName": "",
+          "metadata": "",
+          "omitMetadataKeys": ""
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "description": "Array of document objects containing metadata and pageContent",
+            "options": [
+              {
+                "id": "fileLoader_0-output-document-Document|json",
+                "name": "document",
+                "label": "Document",
+                "description": "Array of document objects containing metadata and pageContent",
+                "type": "Document | json"
+              },
+              {
+                "id": "fileLoader_0-output-text-string|json",
+                "name": "text",
+                "label": "Text",
+                "description": "Concatenated string from pageContent of documents",
+                "type": "string | json"
+              }
+            ],
+            "default": "document"
+          }
+        ],
+        "outputs": {
+          "output": "document"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 438,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 592.1188848601251,
+        "y": 169.9660596707006
+      },
+      "dragging": false
+    },
+    {
+      "id": "openAIEmbeddings_0",
+      "position": {
+        "x": 351.7614398464076,
+        "y": 718.7913011252916
+      },
+      "type": "customNode",
+      "data": {
+        "id": "openAIEmbeddings_0",
+        "label": "OpenAI Embeddings",
+        "version": 4,
+        "name": "openAIEmbeddings",
+        "type": "OpenAIEmbeddings",
+        "baseClasses": [
+          "OpenAIEmbeddings",
+          "Embeddings"
+        ],
+        "category": "Embeddings",
+        "description": "OpenAI API to generate embeddings for a given text",
+        "inputParams": [
+          {
+            "label": "Connect Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "openAIApi"
+            ],
+            "id": "openAIEmbeddings_0-input-credential-credential"
+          },
+          {
+            "label": "Model Name",
+            "name": "modelName",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "text-embedding-ada-002",
+            "id": "openAIEmbeddings_0-input-modelName-asyncOptions"
+          },
+          {
+            "label": "Strip New Lines",
+            "name": "stripNewLines",
+            "type": "boolean",
+            "optional": true,
+            "additionalParams": true,
+            "id": "openAIEmbeddings_0-input-stripNewLines-boolean"
+          },
+          {
+            "label": "Batch Size",
+            "name": "batchSize",
+            "type": "number",
+            "optional": true,
+            "additionalParams": true,
+            "id": "openAIEmbeddings_0-input-batchSize-number"
+          },
+          {
+            "label": "Timeout",
+            "name": "timeout",
+            "type": "number",
+            "optional": true,
+            "additionalParams": true,
+            "id": "openAIEmbeddings_0-input-timeout-number"
+          },
+          {
+            "label": "BasePath",
+            "name": "basepath",
+            "type": "string",
+            "optional": true,
+            "additionalParams": true,
+            "id": "openAIEmbeddings_0-input-basepath-string"
+          },
+          {
+            "label": "Dimensions",
+            "name": "dimensions",
+            "type": "number",
+            "optional": true,
+            "additionalParams": true,
+            "id": "openAIEmbeddings_0-input-dimensions-number"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "modelName": "text-embedding-ada-002",
+          "stripNewLines": "",
+          "batchSize": "",
+          "timeout": "",
+          "basepath": "",
+          "dimensions": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "openAIEmbeddings_0-output-openAIEmbeddings-OpenAIEmbeddings|Embeddings",
+            "name": "openAIEmbeddings",
+            "label": "OpenAIEmbeddings",
+            "description": "OpenAI API to generate embeddings for a given text",
+            "type": "OpenAIEmbeddings | Embeddings"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 423,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 351.7614398464076,
+        "y": 718.7913011252916
+      },
+      "dragging": false
+    },
+    {
+      "id": "postgresRecordManager_0",
+      "position": {
+        "x": 849.4630980739503,
+        "y": 886.1369566132682
+      },
+      "type": "customNode",
+      "data": {
+        "id": "postgresRecordManager_0",
+        "label": "Postgres Record Manager",
+        "version": 1,
+        "name": "postgresRecordManager",
+        "type": "Postgres RecordManager",
+        "baseClasses": [
+          "Postgres RecordManager",
+          "RecordManager"
+        ],
+        "category": "Record Manager",
+        "description": "Use Postgres to keep track of document writes into the vector databases",
+        "inputParams": [
+          {
+            "label": "Connect Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "PostgresApi"
+            ],
+            "optional": false,
+            "id": "postgresRecordManager_0-input-credential-credential"
+          },
+          {
+            "label": "Host",
+            "name": "host",
+            "type": "string",
+            "optional": false,
+            "id": "postgresRecordManager_0-input-host-string"
+          },
+          {
+            "label": "Database",
+            "name": "database",
+            "type": "string",
+            "optional": false,
+            "id": "postgresRecordManager_0-input-database-string"
+          },
+          {
+            "label": "Port",
+            "name": "port",
+            "type": "number",
+            "placeholder": "5432",
+            "optional": true,
+            "id": "postgresRecordManager_0-input-port-number"
+          },
+          {
+            "label": "Additional Connection Configuration",
+            "name": "additionalConfig",
+            "type": "json",
+            "additionalParams": true,
+            "optional": true,
+            "id": "postgresRecordManager_0-input-additionalConfig-json"
+          },
+          {
+            "label": "Table Name",
+            "name": "tableName",
+            "type": "string",
+            "placeholder": "upsertion_records",
+            "additionalParams": true,
+            "optional": true,
+            "id": "postgresRecordManager_0-input-tableName-string"
+          },
+          {
+            "label": "Namespace",
+            "name": "namespace",
+            "type": "string",
+            "description": "If not specified, chatflowid will be used",
+            "additionalParams": true,
+            "optional": true,
+            "id": "postgresRecordManager_0-input-namespace-string"
+          },
+          {
+            "label": "Cleanup",
+            "name": "cleanup",
+            "type": "options",
+            "description": "Read more on the difference between different cleanup methods <a target=\"_blank\" href=\"https://js.langchain.com/docs/modules/data_connection/indexing/#deletion-modes\">here</a>",
+            "options": [
+              {
+                "label": "None",
+                "name": "none",
+                "description": "No clean up of old content"
+              },
+              {
+                "label": "Incremental",
+                "name": "incremental",
+                "description": "Delete previous versions of the content if content of the source document has changed. Important!! SourceId Key must be specified and document metadata must contains the specified key"
+              },
+              {
+                "label": "Full",
+                "name": "full",
+                "description": "Same as incremental, but if the source document has been deleted, it will be deleted from vector store as well, incremental mode will not."
+              }
+            ],
+            "additionalParams": true,
+            "default": "none",
+            "id": "postgresRecordManager_0-input-cleanup-options"
+          },
+          {
+            "label": "SourceId Key",
+            "name": "sourceIdKey",
+            "type": "string",
+            "description": "Key used to get the true source of document, to be compared against the record. Document metadata must contains SourceId Key",
+            "default": "source",
+            "placeholder": "source",
+            "additionalParams": true,
+            "optional": true,
+            "id": "postgresRecordManager_0-input-sourceIdKey-string"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "host": "aws-0-ap-southeast-1.pooler.supabase.com",
+          "database": "postgres",
+          "port": "",
+          "additionalConfig": "",
+          "tableName": "Pdf",
+          "namespace": "",
+          "cleanup": "none",
+          "sourceIdKey": "source"
+        },
+        "outputAnchors": [
+          {
+            "id": "postgresRecordManager_0-output-postgresRecordManager-Postgres RecordManager|RecordManager",
+            "name": "postgresRecordManager",
+            "label": "Postgres RecordManager",
+            "description": "Use Postgres to keep track of document writes into the vector databases",
+            "type": "Postgres RecordManager | RecordManager"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 623,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 849.4630980739503,
+        "y": 886.1369566132682
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "openAIEmbeddings_0",
+      "sourceHandle": "openAIEmbeddings_0-output-openAIEmbeddings-OpenAIEmbeddings|Embeddings",
+      "target": "pinecone_0",
+      "targetHandle": "pinecone_0-input-embeddings-Embeddings",
+      "type": "buttonedge",
+      "id": "openAIEmbeddings_0-openAIEmbeddings_0-output-openAIEmbeddings-OpenAIEmbeddings|Embeddings-pinecone_0-pinecone_0-input-embeddings-Embeddings"
+    },
+    {
+      "source": "fileLoader_0",
+      "sourceHandle": "fileLoader_0-output-document-Document|json",
+      "target": "pinecone_0",
+      "targetHandle": "pinecone_0-input-document-Document",
+      "type": "buttonedge",
+      "id": "fileLoader_0-fileLoader_0-output-document-Document|json-pinecone_0-pinecone_0-input-document-Document"
+    },
+    {
+      "source": "recursiveCharacterTextSplitter_0",
+      "sourceHandle": "recursiveCharacterTextSplitter_0-output-recursiveCharacterTextSplitter-RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable",
+      "target": "fileLoader_0",
+      "targetHandle": "fileLoader_0-input-textSplitter-TextSplitter",
+      "type": "buttonedge",
+      "id": "recursiveCharacterTextSplitter_0-recursiveCharacterTextSplitter_0-output-recursiveCharacterTextSplitter-RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable-fileLoader_0-fileLoader_0-input-textSplitter-TextSplitter"
+    },
+    {
+      "source": "postgresRecordManager_0",
+      "sourceHandle": "postgresRecordManager_0-output-postgresRecordManager-Postgres RecordManager|RecordManager",
+      "target": "pinecone_0",
+      "targetHandle": "pinecone_0-input-recordManager-RecordManager",
+      "type": "buttonedge",
+      "id": "postgresRecordManager_0-postgresRecordManager_0-output-postgresRecordManager-Postgres RecordManager|RecordManager-pinecone_0-pinecone_0-input-recordManager-RecordManager"
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A Kind Place - Navigation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f0f7ff;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .nav-container {
+            background: #dbedf5;
+            padding: 15px 0;
+            padding-bottom: 50px;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .top-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .logo {
+            justify-self: start;
+        }
+        
+        .logo img {
+            height: 75px;
+            width: auto;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 35px;
+            justify-self: center;
+        }
+        
+        .social-icons img {
+            height: 16px;
+            width: 16px;
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            justify-self: end;
+            margin-right: 9%;
+        }        
+
+        .language-selector img {
+            height: 26px;
+            width: 26px;
+        }
+        
+        .language-selector a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 24px;
+            padding-left: 4%; /* Increased padding to push nav links more to the right */
+            /* background-color: red; */
+        }
+        
+        .nav-links a {
+            color: #29537D;
+            text-decoration: none;
+        }
+        
+        .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            margin-top: -50px;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            border: none;
+        }
+
+        .carousel-dot.active {
+            background-color: white;
+        }
+
+        .chatbot-button, .whatsapp-button {
+            background: #FF9EAA; /* Pink for AI Chat */
+            color: white;
+            padding: 12px 0px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the text */
+            gap: 5px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            width: 150px; /* Set fixed width for both buttons */
+        }
+        .whatsapp-button {
+            background: #29537D; /* Blue for WhatsApp */
+            margin-top: 10px; /* Space between buttons */
+        }
+        .whatsapp-button img {
+            height: 16px;
+            width: 16px;
+        }
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-right: 50px;
+        }
+
+        .floating-chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #FF9EAA;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1001;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .floating-chat-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+/* Remove the .visible class and related styles as we're using display property directly */
+
+        /* Chat iframe styles */
+        #chatFrame {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            border: none;
+            background: transparent;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+
+        #chatFrame.visible {
+            display: block;
+        }
+
+        /* Add chat icon for the floating button */
+        .chat-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .streamlit-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            border: none;
+            z-index: 1000;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <div class="top-section">
+                <a href="#" class="logo">
+                    <img src="img/AKP-Logo-Blue.png" alt="A Kind Place Logo"/>
+                </a>
+                
+                <div class="social-icons">
+                    <img src="img/tik-tok.png" alt="TikTok"/>
+                    <img src="img/facebook.png" alt="Facebook"/>
+                    <img src="img/instagram.png" alt="Instagram"/>
+                    <img src="img/linkedin.png" alt="LinkedIn"/>
+                </div>
+                
+                <div class="language-selector">
+                    <a href="#">
+                        <img src="img/zh-CN.png" alt="Chinese flag"/>
+                        ZH-CN
+                    </a>
+                    <a href="#">
+                        <img src="img/en.png" alt="UK flag"/>
+                        EN
+                    </a>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">About Us ▾</a>
+                    <a href="#">Services ▾</a>
+                    <a href="#">Sleep Therapy</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                
+                <div class="buttons-container">
+                    <a href="#" class="whatsapp-button">
+                        WhatsApp <img src="img/whatsapp.png" alt="WhatsApp icon"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-slide">
+                <img src="img/carousel1.png" alt="Slide 1">
+            </div>
+            <div class="carousel-slide">
+                <img src="img/carousel2.png" alt="Slide 2">
+            </div>
+            <div class="carousel-slide">
+                <img src="img/carousel3.png" alt="Slide 3">
+            </div>
+        </div>
+        <div class="carousel-indicators">
+            <button class="carousel-dot active"></button>
+            <button class="carousel-dot"></button>
+            <button class="carousel-dot"></button>
+        </div>
+    </div>
+    <!-- Chat Button -->
+    <button onclick="toggleChat()" class="floating-chat-button" id="chatButton">
+        <span class="chat-icon"></span>
+        Chat with Us
+    </button>
+
+    <!-- Chat iframe -->
+    <iframe
+        src="http://localhost:8501/?embed=true"
+        id="chatFrame"
+        style="position: fixed; bottom: 20px; right: 20px; width: 400px; height: 600px; border: none; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); display: none;"
+    ></iframe>
+    
+    <script>
+        const carousel = document.querySelector('.carousel-inner');
+        const dots = document.querySelectorAll('.carousel-dot');
+        let currentSlide = 0;
+    
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+    
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+    
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 3;
+            updateCarousel();
+        }, 5000);
+
+ // Function to toggle chat visibility
+ function toggleChat() {
+        const chatFrame = document.getElementById('chatFrame');
+        const chatButton = document.getElementById('chatButton');
+        
+        if (chatFrame.style.display === 'block') {
+            closeChat();
+        } else {
+            openChat();
+        }
+    }
+
+    // Function to open chat
+    function openChat() {
+        const chatFrame = document.getElementById('chatFrame');
+        const chatButton = document.getElementById('chatButton');
+        chatFrame.style.display = 'block';
+        chatButton.style.display = 'none';
+    }
+    </script>
+
+</body>
+</html>
